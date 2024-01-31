@@ -1,7 +1,47 @@
-export default function Home() {
+import { supabase } from "@/lib/supabase";
+import { getUser } from "@/lib/user.server";
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+
+const signOut = async () => {
+  "use server";
+  await supabase.auth.signOut();
+  cookies().set("sb-access-token", "", {maxAge: 0});
+  cookies().set("sb-refresh-token", "", {maxAge: 0});
+  revalidatePath('/');
+};
+
+export default async function Home() {
+  const user = await getUser();
+
   return (
-    <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-600 dark:from-purple-600 via-purple-800 to-purple-900 dark:to-purple-700 inline-block text-transparent bg-clip-text">
-      Supabase Next Template
-    </h1>
+    <>
+      <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-600 dark:from-purple-600 via-purple-800 to-purple-900 dark:to-purple-700 inline-block text-transparent bg-clip-text">
+        Supabase Next Template
+      </h1>
+      {user ? (
+        <>
+          <p className="text-xl">Welcome, {user.email}</p>
+          <form action={signOut}>
+            <button className="inline-flex items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300">
+              Logout
+            </button>
+          </form>
+        </>
+      ) : (
+        <a
+          className="inline-flex items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+          href="/login"
+        >
+          Login
+        </a>
+      )}
+      <a
+        className="inline-flex items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+        href="/pricing"
+      >
+        Go to Pricing
+      </a>
+    </>
   );
 }
