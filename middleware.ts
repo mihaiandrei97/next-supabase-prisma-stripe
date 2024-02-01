@@ -44,6 +44,7 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
+// adapt matcher to not look for api/auth/callback
 export const config = {
   matcher: [
     /*

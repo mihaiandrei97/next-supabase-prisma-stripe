@@ -1,29 +1,32 @@
 import { Button } from "@/components/ui/button";
 import { getBaseUrl } from "@/lib/helpers";
 import { supabase } from "@/lib/supabase";
+import { getUser } from "@/lib/user.server";
 import { Provider } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
-export default function Login() {
+export default async function Login() {
+  const user = await getUser();
+
+  if (user) {
+    redirect("/");
+  }
 
   const signIn = async (formData: FormData) => {
     "use server";
     const provider = formData.get("provider") as string;
     const baseUrl = getBaseUrl();
-    const {data, error} = await supabase.auth.signInWithOAuth({
-        provider: provider as Provider,
-        options: {
-            redirectTo: `${baseUrl}/api/auth/callback`
-        }
-    })
-    redirect(data?.url || '')
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: provider as Provider,
+      options: {
+        redirectTo: `${baseUrl}/api/auth/callback`,
+      },
+    });
+    redirect(data?.url || "");
   };
 
   return (
-    <form
-      action={signIn}
-      className="w-full max-w-xl flex flex-col gap-8"
-    >
+    <form action={signIn} className="w-full max-w-xl flex flex-col gap-8">
       <Button
         value="github"
         name="provider"
