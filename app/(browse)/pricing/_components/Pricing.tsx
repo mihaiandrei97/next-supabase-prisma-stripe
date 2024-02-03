@@ -3,8 +3,9 @@
 import { useElementSize, useMouse } from "@mantine/hooks";
 import { CheckIcon, ShieldCloseIcon } from "lucide-react";
 import { useState } from "react";
-// import { useToast } from "@/components/ui/use-toast";
-import { ProTier, Product } from "@/lib/products";
+import { Product } from "@/lib/products";
+import { stripeRedirect } from "@/actions/stripe-redirect";
+import PricingButton from "./PricingButton";
 
 interface IPricingItem {
   type: "buy" | "upgrade";
@@ -13,8 +14,6 @@ interface IPricingItem {
 }
 
 export default function PricingItem({ product, type, loggedIn }: IPricingItem) {
-  //   const { toast } = useToast();
-  let status = "test";
   const { ref: circleEl, width, height } = useElementSize();
   const { ref: cardEl, x, y } = useMouse();
 
@@ -28,10 +27,6 @@ export default function PricingItem({ product, type, loggedIn }: IPricingItem) {
 
   function handleMouseLeave() {
     setOpacity(0);
-  }
-
-  function handleSubscribe(proTier: ProTier) {
-    console.log("buy pro tier", proTier);
   }
 
   return (
@@ -76,28 +71,36 @@ export default function PricingItem({ product, type, loggedIn }: IPricingItem) {
           Pay once. <strong>Unlock forever!</strong>
         </p>
 
-        <button
-          onClick={() => handleSubscribe(product.proTier)}
-          style={{ background: product.color }}
-          className={`rounded-xl text-white text-lg py-4 w-full my-8 font-semibold hover:opacity-80 group relative`}
-        >
-          {status === "pending" ? (
-            "Loading..."
-          ) : (
-            <>
-              {type === "upgrade" ? "Upgrade to" : "Buy"} {product.name}
-            </>
-          )}
+        <form action={stripeRedirect}>
+          <PricingButton
+            product={product}
+            type={type}
+            loggedIn={loggedIn}
+          />
+          {/* <button
+            name="proTier"
+            value={product.proTier}
+            style={{ background: product.color }}
+            className={`rounded-xl text-white text-lg py-4 w-full my-8 font-semibold hover:opacity-80 group relative`}
+          >
+            {pending ? (
+              "Loading..."
+            ) : (
+              <>
+                {type === "upgrade" ? "Upgrade to" : "Buy"} {product.name}
+              </>
+            )}
 
-          {!loggedIn && (
-            <a
-              className="hidden bg-white border-2 border-purple-900 w-full h-full text-center font-semibold rounded-xl absolute inset-0 text-black group-hover:flex items-center justify-center"
-              href="/login"
-            >
-              You must login first
-            </a>
-          )}
-        </button>
+            {!loggedIn && (
+              <a
+                className="hidden bg-white border-2 border-purple-900 w-full h-full text-center font-semibold rounded-xl absolute inset-0 text-black group-hover:flex items-center justify-center"
+                href="/login"
+              >
+                You must login first
+              </a>
+            )}
+          </button> */}
+        </form>
 
         <ul className="space-y-2">
           {product.benefits.map((benefit: any) => (

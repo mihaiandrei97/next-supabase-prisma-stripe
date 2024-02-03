@@ -1,10 +1,4 @@
-export const ProTier = {
-  BASIC: "BASIC",
-  GOLD: "GOLD",
-  PLATINUM: "PLATINUM",
-};
-
-export type ProTier = (typeof ProTier)[keyof typeof ProTier];
+import { ProTier } from "@prisma/client";
 
 export type Product = {
   proTier: ProTier;
