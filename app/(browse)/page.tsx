@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { createSupabaseInstance } from "@/lib/supabase";
 import { getUser } from "@/lib/user.server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -6,9 +6,8 @@ import Link from "next/link";
 
 const signOut = async () => {
   "use server";
+  const supabase = createSupabaseInstance(cookies());
   await supabase.auth.signOut();
-  cookies().set("sb-access-token", "", {maxAge: 0});
-  cookies().set("sb-refresh-token", "", {maxAge: 0});
   revalidatePath('/');
 };
 

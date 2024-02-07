@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { getBaseUrl } from "@/lib/helpers";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseInstance } from "@/lib/supabase";
 import { getUser } from "@/lib/user.server";
 import { Provider } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Login() {
@@ -16,6 +17,7 @@ export default async function Login() {
     "use server";
     const provider = formData.get("provider") as string;
     const baseUrl = getBaseUrl();
+    const supabase = createSupabaseInstance(cookies());
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: provider as Provider,
       options: {

@@ -1,13 +1,12 @@
 "use server";
 import { cookies } from "next/headers";
-import { supabase } from "./supabase";
 import { db } from "./database";
+import { createSupabaseInstance } from "./supabase";
 
 export async function getUser() {
-  const access_token = cookies().get("sb-access-token")?.value as string;
-  if(!access_token) return null;
   try {
-    const {data, error} = await supabase.auth.getUser(access_token);
+    const supabase = createSupabaseInstance(cookies());
+    const {data, error} = await supabase.auth.getUser();
     if (error) {
       return null;
     } else {
