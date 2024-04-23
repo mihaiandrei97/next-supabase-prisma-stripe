@@ -4,11 +4,9 @@ import { useFormStatus } from "react-dom";
 
 export default function PricingButton({
   product,
-  type,
   loggedIn,
 }: {
   product: Product;
-  type: "buy" | "upgrade";
   loggedIn: boolean;
 }) {
   const { pending } = useFormStatus();
@@ -24,7 +22,7 @@ export default function PricingButton({
         "Loading..."
       ) : (
         <>
-          {type === "upgrade" ? "Upgrade to" : "Buy"} {product.name}
+          Buy {product.name}
         </>
       )}
 
