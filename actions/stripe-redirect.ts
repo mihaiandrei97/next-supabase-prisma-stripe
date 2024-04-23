@@ -1,6 +1,5 @@
 "use server";
 
-import { getUser } from "@/data-access/users";
 import {
   Metadata,
   createCheckoutSession,
@@ -9,11 +8,12 @@ import {
 import { products } from "@/data-access/products";
 import { ProTier } from "@prisma/client";
 import { redirect } from "next/navigation";
+import { getServerSession } from "@/lib/get-server-session";
 
 export async function stripeRedirect(
   data: FormData
 ): Promise<{ url?: string; error?: string }> {
-  const user = await getUser();
+  const user = await getServerSession();
   const proTier = data.get("proTier");
 
   if (!user) {

@@ -1,4 +1,4 @@
-import { getUser } from "@/data-access/users";
+import { getServerSession } from "@/lib/get-server-session";
 import { createSupabaseInstance } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -12,7 +12,7 @@ const signOut = async () => {
 };
 
 export default async function Home() {
-  const user = await getUser();
+  const user = await getServerSession();
 
   return (
     <>

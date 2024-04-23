@@ -1,9 +1,9 @@
-import { getUser } from "@/data-access/users";
 import PricingItem from "./_components/Pricing";
 import { products } from "@/data-access/products";
+import { getServerSession } from "@/lib/get-server-session";
 
 export default async function PricingPage() {
-  const user = await getUser();
+  const user = await getServerSession();
   const loggedIn = !!user;
   return (
     <div className="flex flex-col">

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { getUser } from "@/data-access/users";
+import { getServerSession } from "@/lib/get-server-session";
 import { getBaseUrl } from "@/lib/helpers";
 import { createSupabaseInstance } from "@/lib/supabase";
 import { Provider } from "@supabase/supabase-js";
@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Login() {
-  const user = await getUser();
+  const user = await getServerSession();
 
   if (user) {
     redirect("/");

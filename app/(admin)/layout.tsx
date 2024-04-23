@@ -1,5 +1,5 @@
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { getUser } from "@/data-access/users";
+import { getServerSession } from "@/lib/get-server-session";
 import { redirect } from "next/navigation";
 
 export default async function AdminLayout({
@@ -7,7 +7,7 @@ export default async function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
+  const user = await getServerSession();
   if (!user || user.role !== "ADMIN") {
     return redirect("/")
   }
