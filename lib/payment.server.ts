@@ -1,6 +1,6 @@
 
 import { getBaseUrl } from "@/lib/helpers";
-import type { Product } from "@/lib/products";
+import type { Product } from "@/data-access/products";
 import { stripe } from "@/lib/stripe";
 import type { ProTier } from "@prisma/client";
 import { db } from "./database";

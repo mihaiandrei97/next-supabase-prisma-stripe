@@ -6,7 +6,7 @@ import {
   createCheckoutSession,
   getOrCreateStripeCustomerId,
 } from "@/lib/payment.server";
-import { products } from "@/lib/products";
+import { products } from "@/data-access/products";
 import { ProTier } from "@prisma/client";
 import { redirect } from "next/navigation";
 

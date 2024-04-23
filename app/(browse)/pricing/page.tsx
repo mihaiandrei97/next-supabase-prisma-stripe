@@ -1,6 +1,6 @@
 import { getUser } from "@/data-access/users";
 import PricingItem from "./_components/Pricing";
-import { products } from "@/lib/products";
+import { products } from "@/data-access/products";
 
 export default async function PricingPage() {
   const user = await getUser();

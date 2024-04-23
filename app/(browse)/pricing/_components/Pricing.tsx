@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckIcon, ShieldCloseIcon } from "lucide-react";
-import { Product } from "@/lib/products";
+import { Product } from "@/data-access/products";
 import { stripeRedirect } from "@/actions/stripe-redirect";
 import PricingButton from "./PricingButton";
 

@@ -1,4 +1,4 @@
-import { Product } from "@/lib/products";
+import { Product } from "@/data-access/products";
 import React from "react";
 import { useFormStatus } from "react-dom";
 
