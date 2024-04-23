@@ -1,12 +1,12 @@
 "use server";
 
+import { getUser } from "@/data-access/users";
 import {
   Metadata,
   createCheckoutSession,
   getOrCreateStripeCustomerId,
 } from "@/lib/payment.server";
 import { products } from "@/lib/products";
-import { getUser } from "@/lib/user.server";
 import { ProTier } from "@prisma/client";
 import { redirect } from "next/navigation";
 

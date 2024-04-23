@@ -1,7 +1,6 @@
-"use server";
+import { db } from "@/lib/database";
+import { createSupabaseInstance } from "@/lib/supabase";
 import { cookies } from "next/headers";
-import { db } from "./database";
-import { createSupabaseInstance } from "./supabase";
 
 export async function getUser() {
   try {

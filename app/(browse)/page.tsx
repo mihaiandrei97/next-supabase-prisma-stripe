@@ -1,5 +1,5 @@
+import { getUser } from "@/data-access/users";
 import { createSupabaseInstance } from "@/lib/supabase";
-import { getUser } from "@/lib/user.server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import Link from "next/link";

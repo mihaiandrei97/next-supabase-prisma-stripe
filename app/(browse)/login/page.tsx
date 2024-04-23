@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { getUser } from "@/data-access/users";
 import { getBaseUrl } from "@/lib/helpers";
 import { createSupabaseInstance } from "@/lib/supabase";
-import { getUser } from "@/lib/user.server";
 import { Provider } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

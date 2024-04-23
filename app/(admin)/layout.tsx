@@ -1,5 +1,5 @@
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { getUser } from "@/lib/user.server";
+import { getUser } from "@/data-access/users";
 import { redirect } from "next/navigation";
 
 export default async function AdminLayout({

@@ -5,7 +5,6 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { getUser } from "@/lib/user.server";
 import Link from "next/link";
 
 export default async function Dashboard() {

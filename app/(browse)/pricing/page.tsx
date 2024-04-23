@@ -1,4 +1,4 @@
-import { getUser } from "@/lib/user.server";
+import { getUser } from "@/data-access/users";
 import PricingItem from "./_components/Pricing";
 import { products } from "@/lib/products";
 
@@ -21,7 +21,6 @@ export default async function PricingPage() {
             <PricingItem
               key={product.proTier}
               product={product}
-              type="buy"
               loggedIn={loggedIn}
             />
           );
