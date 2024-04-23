@@ -1,5 +1,5 @@
-import { Metadata, processPayment } from "@/lib/payment.server";
 import { stripe } from "@/lib/stripe";
+import { Metadata, processPaymentUseCase } from "@/use-cases/payments";
 import { headers } from "next/headers";
 
 import Stripe from "stripe";
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
         if (!sessionWithLineItems.line_items) {
           throw new Error("No line items found");
         }
-        await processPayment({
+        await processPaymentUseCase({
           userId: completedEvent.metadata.userId,
           proTier: completedEvent.metadata.proTier,
           amount: sessionWithLineItems.line_items.data[0].amount_total,

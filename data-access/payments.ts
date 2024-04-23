@@ -1,14 +1,7 @@
-
-import { getBaseUrl } from "@/lib/helpers";
-import type { Product } from "@/data-access/products";
 import { stripe } from "@/lib/stripe";
 import type { ProTier } from "@prisma/client";
-import { db } from "./database";
-
-export type Metadata = {
-  proTier: ProTier;
-  userId: string;
-};
+import { db } from "@/lib/database";
+import { updateProTierUser } from "./users";
 
 export async function getOrCreateStripeCustomerId(
   userId: string,
@@ -42,60 +35,6 @@ export async function getOrCreateStripeCustomerId(
   }
 
   return stripeCustomerId;
-}
-
-export async function createCheckoutSession(
-  product: Product,
-  stripeCustomerId: string,
-  metadata?: Metadata
-) {
-  const session = await stripe.checkout.sessions.create({
-    mode: "payment",
-    customer: stripeCustomerId,
-    success_url: getBaseUrl() + "/success",
-    cancel_url: getBaseUrl() + "/cancel",
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          unit_amount: product.price,
-          product_data: {
-            name: product.name,
-            description: product.description,
-            images: ["https://icodethis.com/logo.png"],
-          },
-        },
-        quantity: 1,
-      },
-    ],
-    metadata,
-    allow_promotion_codes: true,
-    // automatic_tax: {
-    //   enabled: true,
-    // },
-    // invoice_creation: {
-    //   enabled: true,
-    // },
-  });
-
-  return session;
-}
-
-export function updateProTierUser({
-  userId,
-  proTier,
-}: {
-  userId: string;
-  proTier: ProTier;
-}) {
-  return db.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      proTier,
-    },
-  });
 }
 
 export function addPurchase({
@@ -133,12 +72,12 @@ export async function processPayment({
   return result;
 }
 
-export async function getSales(){
+export async function getSales() {
   const purchases = await db.purchase.findMany({
     orderBy: {
-      createdAt: 'desc'
+      createdAt: "desc",
     },
-    select:{
+    select: {
       id: true,
       amount: true,
       createdAt: true,
@@ -146,9 +85,9 @@ export async function getSales(){
       user: {
         select: {
           id: true,
-        }
-      }
-    }
+        },
+      },
+    },
   });
   return purchases;
 }

@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getSales } from "@/lib/payment.server";
+import { getSales } from "@/data-access/payments";
 
 export default async function Sales() {
   const sales = await getSales();

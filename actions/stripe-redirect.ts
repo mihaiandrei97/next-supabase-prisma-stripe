@@ -1,14 +1,11 @@
 "use server";
 
-import {
-  Metadata,
-  createCheckoutSession,
-  getOrCreateStripeCustomerId,
-} from "@/lib/payment.server";
 import { products } from "@/data-access/products";
 import { ProTier } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { getServerSession } from "@/lib/get-server-session";
+import { getOrCreateStripeCustomerId } from "@/data-access/payments";
+import { Metadata, createCheckoutSessionUseCase } from "@/use-cases/payments";
 
 export async function stripeRedirect(
   data: FormData
@@ -46,7 +43,7 @@ export async function stripeRedirect(
     userId: user.id,
   };
 
-  const session = await createCheckoutSession(
+  const session = await createCheckoutSessionUseCase(
     product,
     stripeCustomerId,
     metadata

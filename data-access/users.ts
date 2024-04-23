@@ -1,4 +1,5 @@
 import { db } from "@/lib/database";
+import { ProTier } from "@prisma/client";
 
 export async function getOrCreateUserForSession(userId: string) {
   let user = await db.user.findUnique({
@@ -25,3 +26,19 @@ export async function getOrCreateUserForSession(userId: string) {
   return user;
 }
 
+export function updateProTierUser({
+  userId,
+  proTier,
+}: {
+  userId: string;
+  proTier: ProTier;
+}) {
+  return db.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      proTier,
+    },
+  });
+}
