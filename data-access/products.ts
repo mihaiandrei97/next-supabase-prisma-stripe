@@ -1,4 +1,5 @@
-import { ProTier } from "@prisma/client";
+import user, {proTierEnum} from "@/db/schema/user";
+type ProTier = typeof proTierEnum.enumValues[number]
 
 export type Product = {
   proTier: ProTier;
@@ -12,7 +13,7 @@ export type Product = {
 
 export const products: Product[] = [
   {
-    proTier: ProTier.BASIC,
+    proTier: proTierEnum.enumValues[0],
     name: "Basic",
     description: "Basic product with essential features",
     price: 2990,
@@ -29,7 +30,7 @@ export const products: Product[] = [
     role: "pro_basic",
   },
   {
-    proTier: ProTier.GOLD,
+    proTier: proTierEnum.enumValues[1],
     name: "Gold",
     description: "Premium product with additional features",
     price: 5999,
@@ -46,7 +47,7 @@ export const products: Product[] = [
     role: "pro_gold",
   },
   {
-    proTier: ProTier.PLATINUM,
+    proTier: proTierEnum.enumValues[2],
     name: "Platinum",
     description: "Top-tier product with exclusive features",
     price: 9999,

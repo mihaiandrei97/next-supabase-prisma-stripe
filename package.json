@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "stripe:listen": "stripe listen --forward-to http://localhost:3000/api/payment/stripe-hooks",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate:pg",
+    "db:migrate": "cross-env DB_MIGRATING=true tsx db/migrate.ts",
+    "db:seed": "cross-env DB_SEEDING=true tsx db/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.13.0",
@@ -19,20 +22,28 @@
     "@supabase/supabase-js": "^2.42.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dotenv": "^16.4.5",
+    "dotenv-expand": "^11.0.6",
+    "drizzle-orm": "^0.30.10",
     "lucide-react": "^0.372.0",
     "next": "14.2.2",
     "next-themes": "^0.3.0",
+    "postgres": "^3.4.4",
     "react": "^18",
     "react-dom": "^18",
     "stripe": "^15.3.0",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.9.1",
+    "zod": "^3.23.6"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.19",
+    "cross-env": "^7.0.3",
+    "drizzle-kit": "^0.20.17",
     "eslint": "^8",
     "eslint-config-next": "14.2.2",
     "postcss": "^8",

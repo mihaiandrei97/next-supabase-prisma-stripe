@@ -32,10 +32,10 @@ export default async function Sales() {
           {sales.map((sale) => (
             <TableRow key={sale.id}>
               <TableCell className="font-medium">
-                {sale.createdAt.toISOString().split("T")[0]}
+                {new Date(sale.createdAt).toISOString().split("T")[0]}
               </TableCell>
               <TableCell>{sale.type}</TableCell>
-              <TableCell>{sale.user.id}</TableCell>
+              <TableCell>{sale.userId}</TableCell>
               <TableCell className="text-right">
                 ${(sale.amount / 100).toFixed(2)}
               </TableCell>
