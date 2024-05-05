@@ -1,4 +1,6 @@
-import user, {proTierEnum} from "@/db/schema/user";
+import {proTierEnum} from "@/db/schema/user";
+
+
 type ProTier = typeof proTierEnum.enumValues[number]
 
 export type Product = {
