@@ -1,29 +1,29 @@
-import { db } from "@/lib/database";
-import { ProTier } from "@prisma/client";
+import db from "@/db";
+import user, {proTierEnum} from "@/db/schema/user";
+import { eq } from "drizzle-orm";
+
+type ProTier = typeof proTierEnum.enumValues[number]
 
 export async function getOrCreateUserForSession(userId: string) {
-  let user = await db.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      role: true,
-      proTier: true,
-    },
+  let userRecords = await db.select({
+    id: user.id,
+    role: user.role,
+    proTier: user.proTier
+  }).from(user).where(eq(user.id, userId));
+
+  if(userRecords[0]) {
+    return userRecords[0];
+  }
+
+  userRecords = await db.insert(user).values({
+    id: userId,
+  }).returning({
+    id: user.id,
+    role: user.role,
+    proTier: user.proTier
   });
 
-  if (!user) {
-    user = await db.user.create({
-      data: {
-        id: userId,
-      },
-      select: {
-        id: true,
-        role: true,
-        proTier: true,
-      },
-    });
-  }
-  return user;
+  return userRecords[0];
 }
 
 export function updateProTierUser({
@@ -33,12 +33,7 @@ export function updateProTierUser({
   userId: string;
   proTier: ProTier;
 }) {
-  return db.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      proTier,
-    },
-  });
+  return db.update(user).set({
+    proTier,
+  }).where(eq(user.id, userId));
 }

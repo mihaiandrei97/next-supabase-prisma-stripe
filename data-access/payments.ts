@@ -1,36 +1,30 @@
 import { stripe } from "@/lib/stripe";
-import type { ProTier } from "@prisma/client";
-import { db } from "@/lib/database";
 import { updateProTierUser } from "./users";
+import db from "@/db";
+import { proTierEnum, purchase, user } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
+
+type ProTier = typeof proTierEnum.enumValues[number]
 
 export async function getOrCreateStripeCustomerId(
   userId: string,
   email: string | undefined
 ) {
-  const user = await db.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+  const userRecord = await db.select({id: user.id, stripeCustomerId: user.stripeCustomerId}).from(user).where(eq(user.id, userId));
 
-  if (!user) {
+  if (!userRecord[0]) {
     throw new Error("User not found");
   }
 
-  let stripeCustomerId: string | null = user.stripeCustomerId;
+  let stripeCustomerId: string | null = userRecord[0].stripeCustomerId;
 
   if (!stripeCustomerId) {
     const customer = await stripe.customers.create({
       email,
     });
-    await db.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        stripeCustomerId: customer.id,
-      },
-    });
+    await db.update(user).set({
+      stripeCustomerId: customer.id,
+    }).where(eq(user.id, userId));
     stripeCustomerId = customer.id;
   }
 
@@ -46,12 +40,10 @@ export function addPurchase({
   proTier: ProTier;
   amount: number;
 }) {
-  return db.purchase.create({
-    data: {
-      userId,
-      amount,
-      type: `proTier-${proTier}`,
-    },
+  return db.insert(purchase).values({
+    userId,
+    amount,
+    type: `proTier-${proTier}`,
   });
 }
 
@@ -64,30 +56,11 @@ export async function processPayment({
   proTier: ProTier;
   amount: number;
 }) {
-  const transactions = [
-    updateProTierUser({ userId, proTier }),
-    addPurchase({ userId, proTier, amount }),
-  ];
-  const result = await db.$transaction(transactions);
-  return result;
+    await updateProTierUser({ userId, proTier });
+    await addPurchase({ userId, proTier, amount });
 }
 
 export async function getSales() {
-  const purchases = await db.purchase.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-    select: {
-      id: true,
-      amount: true,
-      createdAt: true,
-      type: true,
-      user: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  });
+  const purchases = await db.select().from(purchase).orderBy(desc(purchase.createdAt));
   return purchases;
 }

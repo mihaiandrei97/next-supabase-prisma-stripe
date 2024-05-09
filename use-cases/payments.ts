@@ -47,11 +47,10 @@ export async function createCheckoutSessionUseCase(
 }
 
 
-export async function processPaymentUseCase(input: {
+export function processPaymentUseCase(input: {
   userId: string;
   proTier: ProTier;
   amount: number;
 }){
-  const result = await processPayment(input);
-  return result;
+  return processPayment(input);
 }
