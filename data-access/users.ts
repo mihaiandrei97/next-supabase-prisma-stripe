@@ -1,27 +1,21 @@
-import { db } from "@/lib/database";
-import { ProTier } from "@prisma/client";
+// import { db } from "@/lib/database";
+// import { ProTier } from "@prisma/client";
+import { db } from "@/db/database";
+import { ProTier } from "@/db/enums";
 
 export async function getOrCreateUserForSession(userId: string) {
-  let user = await db.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      role: true,
-      proTier: true,
-    },
-  });
+  let user = await db
+    .selectFrom("User")
+    .select(["id", "role", "proTier"])
+    .where("id", "=", userId)
+    .executeTakeFirst();
 
   if (!user) {
-    user = await db.user.create({
-      data: {
-        id: userId,
-      },
-      select: {
-        id: true,
-        role: true,
-        proTier: true,
-      },
-    });
+    user = await db
+      .insertInto("User")
+      .values({ id: userId, updatedAt: new Date() })
+      .returning(["id", "role", "proTier"])
+      .executeTakeFirstOrThrow();
   }
   return user;
 }
@@ -33,12 +27,9 @@ export function updateProTierUser({
   userId: string;
   proTier: ProTier;
 }) {
-  return db.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      proTier,
-    },
-  });
+  return db
+    .updateTable("User")
+    .set("proTier", proTier)
+    .where("id", "=", userId)
+    .execute();
 }

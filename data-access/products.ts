@@ -1,4 +1,4 @@
-import { ProTier } from "@prisma/client";
+import { ProTier } from "@/db/enums";
 
 export type Product = {
   proTier: ProTier;
